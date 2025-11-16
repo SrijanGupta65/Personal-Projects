@@ -1,0 +1,864 @@
+/* === Global Styles === */
+body {
+    background-color: #CDDBC8; /* Light green background */
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; 
+    position: relative;
+}
+
+header {
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* === Main Headings Styles === */
+main.container h2,
+main.container h3 {
+  text-align: center;
+  width: 100%;
+}
+
+/* === Login/Signup Containers === */
+.login-container, .sign-up-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    margin: 20px auto; 
+    width: 90%;
+    max-width: 400px;
+}
+
+/* === Form Styles === */
+.login-form, .sign-up-form {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    width: 100%;
+}
+
+.sign-up-container h1 {
+    color: #2c5f2d;
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.login-form h2, .sign-up-form h2 {
+    color: #2c5f2d;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.form-input, .form-textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #d0e0d0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    background-color: #f9fff9;
+}
+
+.form-input:focus, .form-textarea:focus {
+    outline: none;
+    border-color: #4a8c4a;
+    box-shadow: 0 0 0 2px rgba(74, 140, 74, 0.2);
+}
+
+.form-textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #4a6b3a;
+}
+
+/* === Button Styles === */
+button[type="submit"] {
+    width: 100%;
+    padding: 1rem;
+    background-color: #2c5f2d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #1e401f;
+}
+
+.continue-button {
+    margin-top: 1rem;
+}
+
+.new-post-button, .submit-button {
+    background-color: #4a8c4a;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: inline-block;
+}
+
+.new-post-button:hover, .submit-button:hover {
+    background-color: #3a7a3a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.new-post-button:active, .submit-button:active {
+    transform: translateY(0);
+}
+
+.skip-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4a8c4a;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    text-decoration: none;
+    font-size: 1rem;
+}
+.skip-button:hover {
+    background-color: #3a7a3a;
+}
+
+/* === Text/Link Styles === */
+.signup-text, .skip-text, .see-all {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #666;
+}
+
+.link {
+    color: #2c5f2d;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.link:hover {
+    color: #1e401f;
+    text-decoration: underline;
+}
+
+/* === Search Components === */
+.search-container {
+    display: flex;
+    margin: 40px auto;
+    max-width: 600px;
+    background: white;
+    border-radius: 30px;
+    overflow: hidden;
+    padding: 10px 20px; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.search-bar {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    background: transparent;
+}
+
+/* === Filter Styles === */
+.filter-nav {
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    border-radius: 30px;
+    margin: 0 auto 30px;
+    max-width: 800px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.filter-option {
+    padding: 12px 25px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #4a6b3a;
+    transition: all 0.3s;
+    text-align: center;
+    flex: 1;
+}
+
+.filter-option:hover {
+    background-color: #f0f7e6;
+    color: #3a5a2a;
+}
+
+.filter-option.active {
+    background-color: #4a8c4a;
+    color: white;
+}
+
+/* === Community Forum Components === */
+.forum-section {
+    background-color: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+.forum-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.forum-header h2 {
+    color: #2c5f2d;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+}
+
+.forum-header p {
+    color: #5a6a5a;
+    max-width: 800px;
+    margin: 0 auto 25px;
+    font-size: 1.1rem;
+}
+
+.posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.post {
+    background-color: white;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    border: 1px solid #e0e9e0;
+    transition: transform 0.3s, box-shadow 0.3s;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.post:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.post-author {
+    font-weight: 600;
+    color: #4a8c4a;
+    font-size: 1.1rem;
+}
+
+.post-content h3 {
+    color: #2c5f2d;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.post-content p {
+    color: #4a5a4a;
+    margin-bottom: 20px;
+    font-size: 1.05rem;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid #e0e9e0;
+    color: #7a8a7a;
+    font-size: 0.9rem;
+}
+
+.post-action {
+    color: #5a6a5a;
+    cursor: pointer;
+    transition: color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.post-action:hover {
+    color: #4a8c4a;
+}
+
+/* === Modal Styles === */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(3px);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+.modal-content h2 {
+    color: #2c5f2d;
+    margin-top: 0;
+    text-align: center;
+}
+
+/* === Navigation Bar Styles === */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #205624;
+    padding: 0 30px;
+    color: white;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links li {
+    display: inline;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    transition: color 0.3s ease-in-out;
+    padding: 6px;
+    display: block;
+}
+
+.nav-links a:hover {
+    color: #CDDBC8;
+}
+
+.menu-toggle {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* === Responsive Styles === */
+@media (max-width: 768px) {
+    .filter-nav {
+        flex-wrap: wrap;
+    }
+    
+    .filter-option {
+        padding: 10px 15px;
+        flex: 1 0 40%;
+    }
+    
+    .post-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .modal-content {
+        margin: 20% auto;
+        padding: 20px;
+    }
+
+    .plants-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .skip-button {
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .care-card,
+    .plant-card-horizontal {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .care-card img,
+    .plant-card-horizontal img {
+        width: 100%;
+        height: 200px;
+    }
+
+    .add-plant-button {
+        width: 35px;
+        height: 35px;
+        font-size: 1.3rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .plants-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 430px) {
+    .container {
+        padding: 5px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .seed-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px; 
+        justify-content: center;
+    }
+
+    .seed-item {
+        width: 120px; 
+        height: 160px; 
+        padding: 8px;
+        text-align: center;
+        border-radius: 5px; 
+        box-shadow: 0 0 6px rgba(0,0,0,0.08);
+    }
+
+    .seed-item img {
+        width: 100px; 
+        height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .search-container {
+        flex-direction: row;
+        align-items: center;
+        padding: 5px;
+    }
+
+    .search-bar {
+        width: 45%;
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    .search-button {
+        width: 25%;
+        height: 25%;
+        padding: 6px;
+        font-size: 12px; 
+        margin-right: 5px;
+        border-radius: 7px;
+    }
+}
+
+@media (min-width: 600px) {
+    .seed-shop {
+        width: 600px;
+        height: auto; 
+        flex-direction: row; 
+        text-align: left;
+        align-items: center;
+        padding: 20px;
+        max-width: 800px;
+    }
+
+    .seed-shop img {
+        width: 200px;
+        height: 140px;
+        margin-right: 20px;
+        flex-shrink: 0; 
+    }
+
+    .shop-info {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        margin-left: 15px; 
+    }
+
+    .shop-name {
+        font-size: 20px;
+        font-weight: bold;
+        color: #205624;
+    }
+
+    .shop-address {
+        font-size: 16px;
+        color: #333;
+        margin-top: 5px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hamburger {
+        display: block;
+        cursor: pointer;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        padding: 10px;
+      }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #2a6b30; /* Slightly darker green for contrast */
+        position: absolute;
+        top: 100%;
+        left: 0;
+        gap: 0;
+        padding: 10px 0;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    }
+
+    .nav-links li {
+        display: block;
+        text-align: center;
+        width: 100%;
+    }
+
+    .nav-links a {
+        padding: 15px 20px;
+    }
+
+    .nav-links a:hover {
+        background-color: #1e4b21;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links.show {
+        display: flex;
+    }
+}
+
+/* === Layout Styles === */
+.section {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    display: flex;
+}
+
+section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.sec-head {
+    text-align: center;
+    width: 100%;
+    margin: 40px 0 20px;
+    flex-grow: 1;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+    margin: 40px auto 20px;
+    max-width: 800px;
+}
+
+/* === Card Components === */
+.item{
+    text-align: center;
+    margin: 0 1rem;
+    flex: 0 1 200px;
+}
+
+.item img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+}
+
+.item figcaption {
+    text-align: center;
+    font-weight: 600;
+    color: #2c5f2d;
+}
+
+.container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* === Seed Finder Styles === */
+.seed-list {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.seed-item {
+    width: 190px;
+    height: 230px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 15px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.seed-item img {
+    max-width: 192px;
+    height: 128px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.price {
+    font-weight: bold;
+    color: #205624;
+}
+
+.see-all {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.see-all a {
+    text-decoration: none;
+    color: #205624;
+    font-weight: bold;
+}
+
+/* === Seed Shop Styles === */
+.seed-shop-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.seed-shop {
+    width: 350px;
+    height: 250px;
+    max-width: 600px;
+    background-color: white;
+    padding: 15px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.seed-shop-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.seed-shop img {
+    width: 100%;
+    max-width: 300px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.shop-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #205624;
+    margin-top: 10px;
+}
+
+.shop-address {
+    font-size: 14px;
+    color: #333;
+    margin-top: 5px;
+}
+
+/* === Plant Page Styles === */
+.plants-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 20px;
+    margin: 2rem auto 0;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.plant-card {
+    width: 100%;
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.plant-card:hover {
+    transform: translateY(-5px);
+}
+
+.plant-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.plant-name {
+    color: #2c5f2d;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+/* === Card Layouts === */
+.care-card,
+.plant-card-horizontal {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.care-card img,
+.plant-card-horizontal img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.card-content h3 {
+    margin: 0 0 10px 0;
+    color: #2c5f2d;
+    font-size: 1.4rem;
+}
+
+.card-content p {
+    color: #666;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.add-plant-button {
+    background-color: #2c5f2d;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 15px;
+}
+
+.add-plant-button:hover {
+    background-color: #1e401f;
+    transform: scale(1.1);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+}

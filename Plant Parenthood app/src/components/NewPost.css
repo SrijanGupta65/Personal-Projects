@@ -1,0 +1,295 @@
+.new-post-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .new-post-content {
+    background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .new-post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .new-post-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #2c3e50;
+  }
+  
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #7f8c8d;
+    padding: 5px;
+  }
+  
+  .close-button:hover {
+    color: #e74c3c;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+  
+  .form-group input.error,
+  .form-group textarea.error {
+    border-color: #e74c3c;
+  }
+  
+  .error-message {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: block;
+  }
+  
+  .hint {
+    color: #7f8c8d;
+    font-size: 0.85rem;
+    display: block;
+    margin-top: 5px;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .cancel-button {
+    padding: 10px 20px;
+    background-color: #ecf0f1;
+    color: #2c3e50;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  
+  .cancel-button:hover {
+    background-color: #d5dbdb;
+  }
+  
+  .submit-button {
+    padding: 10px 20px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  
+  .submit-button:hover {
+    background-color: #219653;
+  }
+
+  .post {
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between; 
+    height: 100%; 
+  }
+  
+  .action-button {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .post-action {
+    background: none;
+    border: none;
+    color: #4a6b57;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+  
+  .post-action:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Media query for smaller screens */
+  @media (max-width: 768px) {
+    .post-actions {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  
+    .action-buttons {
+      width: 30%;
+      justify-content: flex-start;
+      margin-top: 5px;
+      padding-left: 10px;
+    }
+  
+    .post-action {
+      padding: 5px 8px;
+    }
+  }
+
+  .replies-section {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 10px;
+  }
+  
+  .replies-title {
+    color: #4a6b57;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  
+  .reply {
+    padding: 10px 0;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .reply:last-child {
+    border-bottom: none;
+  }
+  
+  .reply-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+  
+  .reply-author {
+    font-weight: bold;
+    color: #4a6b57;
+  }
+  
+  .reply-date {
+    color: #6c757d;
+    font-size: 0.8rem;
+  }
+  
+  .reply-content {
+    margin: 0;
+    color: #495057;
+    font-size: 0.9rem;
+  }
+
+  .delete-button {
+    color: #dc3545;
+  }
+  
+  .delete-button:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+  }
+
+  .edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .form-input, .form-textarea {
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-family: inherit;
+  }
+  
+  .form-textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  
+  .form-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .primary-button, .secondary-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .primary-button {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+  }
+  
+  .secondary-button {
+    background: none;
+    border: 1px solid #bdc3c7;
+    color: #7f8c8d;
+  }
+
+  @media (max-width: 768px) {
+    .post-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+    }
+    
+    .post-actions {
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .action-buttons {
+      width: 30%;
+      justify-content: flex-end;
+    }
+  }
