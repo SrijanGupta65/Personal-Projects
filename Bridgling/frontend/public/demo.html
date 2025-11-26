@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bridgeling Demo - University of Washington</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 600px;
+      width: 100%;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #1f2937;
+      margin-bottom: 12px;
+      font-size: 32px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      margin-bottom: 24px;
+      font-size: 16px;
+    }
+
+    .demo-section {
+      margin-bottom: 32px;
+    }
+
+    .demo-section h2 {
+      color: #374151;
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+
+    .code-block {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px;
+      font-family: "Monaco", "Courier New", monospace;
+      font-size: 13px;
+      color: #1f2937;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    .feature-list {
+      list-style: none;
+      margin-bottom: 24px;
+    }
+
+    .feature-list li {
+      padding: 12px;
+      margin-bottom: 8px;
+      background: #f9fafb;
+      border-left: 4px solid #667eea;
+      border-radius: 4px;
+      color: #374151;
+    }
+
+    .feature-list strong {
+      color: #1f2937;
+    }
+
+    .init-button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 16px;
+    }
+
+    .init-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .init-button:active {
+      transform: translateY(0);
+    }
+
+    .status {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #93c5fd;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bridgeling Demo</h1>
+    <p class="subtitle">AI assistant for institutional Q&A</p>
+
+    <div class="demo-section">
+      <h2>Features</h2>
+      <ul class="feature-list">
+        <li><strong>Multilingual:</strong> Ask questions in any language</li>
+        <li><strong>Smart Retrieval:</strong> Finds answers from institutional content</li>
+        <li><strong>Claude-Powered:</strong> Reasoning and generation via Claude 3.5 Sonnet</li>
+        <li><strong>Embedded:</strong> Single-line widget embed, no setup required</li>
+        <li><strong>Cited Sources:</strong> Links to original documents</li>
+      </ul>
+    </div>
+
+    <div class="demo-section">
+      <h2>Quick Start</h2>
+      <p style="margin-bottom: 12px; color: #6b7280">
+        Click the button below to initialize the widget. Try asking questions in any language!
+      </p>
+      <button class="init-button" onclick="initBridgeling()">
+        Initialize Bridgeling Widget
+      </button>
+      <div id="status"></div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Manual Initialization</h2>
+      <p style="margin-bottom: 12px; color: #6b7280">
+        Or initialize with custom settings:
+      </p>
+      <div class="code-block">
+&lt;script src="http://localhost:8000/widget.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  Bridgeling.init({
+    tenantId: "uw",
+    apiUrl: "http://localhost:3000"
+  });
+&lt;/script&gt;
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Example Queries</h2>
+      <p style="margin-bottom: 12px; color: #6b7280">
+        Try these to test the assistant:
+      </p>
+      <div style="display: grid; gap: 8px">
+        <code style="padding: 8px; background: #f9fafb; border-radius: 4px">Where can I find financial aid information?</code>
+        <code style="padding: 8px; background: #f9fafb; border-radius: 4px">Où trouver les informations sur les bourses?</code>
+        <code style="padding: 8px; background: #f9fafb; border-radius: 4px">奖学金申请流程是什么?</code>
+        <code style="padding: 8px; background: #f9fafb; border-radius: 4px">Cómo me registro para clases?</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- Widget Script (points to local dev server) -->
+  <script src="http://localhost:8000/widget.js"></script>
+
+  <script>
+    function initBridgeling() {
+      const status = document.getElementById("status");
+      try {
+        window.Bridgeling.init({
+          tenantId: "uw",
+          apiUrl: "http://localhost:3000",
+        });
+        status.innerHTML = '✓ Widget initialized! Look for the 💬 button in the bottom-right corner.';
+        status.style.background = "#dcfce7";
+        status.style.color = "#166534";
+        status.style.borderColor = "#86efac";
+      } catch (error) {
+        status.innerHTML = `✗ Error: ${error.message}`;
+        status.style.background = "#fee2e2";
+        status.style.color = "#991b1b";
+        status.style.borderColor = "#fca5a5";
+      }
+    }
+  </script>
+</body>
+</html>
