@@ -1,5 +1,5 @@
 import Fastify from "fastify";
-import fastifyCors from "fastify-cors";
+import cors from "@fastify/cors";
 import { initializeDatabase, closePool } from "./db/postgres.js";
 import { registerQueryRoutes } from "./api/query.js";
 import { registerTenantRoutes } from "./api/tenants.js";
@@ -24,7 +24,7 @@ async function main() {
   });
 
   // Register CORS
-  await app.register(fastifyCors, {
+  await app.register(cors, {
     origin: true,
   });
 

@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import { v4 as uuidv4 } from "uuid";
-import { Tenant } from "../../shared/types/index.js";
+import { Tenant } from "../types.js";
 import { query as dbQuery } from "../db/postgres.js";
 import { logger } from "../utils/logger.js";
 

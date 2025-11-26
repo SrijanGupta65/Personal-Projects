@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
-import { QueryRequest, QueryResponse } from "../../shared/types/index.js";
+import { QueryRequest, QueryResponse } from "../types.js";
 import {
   detectLanguage,
   translateToEnglish,

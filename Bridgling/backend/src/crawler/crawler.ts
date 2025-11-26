@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 import * as cheerio from "cheerio";
 import { Readability } from "@mozilla/readability";
 import { JSDOM } from "jsdom";
@@ -32,12 +31,17 @@ function isValidUrl(url: string, allowedDomains: string[]): boolean {
 
 async function fetchAndParsePage(url: string): Promise<PageContent | null> {
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
     const response = await fetch(url, {
       headers: {
         "User-Agent": process.env.CRAWLER_USER_AGENT || "Bridgeling-Bot/1.0",
       },
-      timeout: 10000,
+      signal: controller.signal,
     });
+
+    clearTimeout(timeout);
 
     if (!response.ok) {
       logger.warn({ url, status: response.status }, "Failed to fetch page");
