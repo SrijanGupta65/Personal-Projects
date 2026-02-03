@@ -2,6 +2,30 @@
 
 No-code text → text AI assistant for institutional Q&A. Claude-only, multilingual, embeddable.
 
+## The Problem
+
+Institutional websites (universities, government agencies, healthcare organizations) contain vast amounts of scattered information across hundreds or thousands of pages. Users struggle to find answers to their questions—buried in FAQs, policy documents, course catalogs, and help pages. Staff spend time answering repetitive questions. There's no unified way to search across all institutional knowledge.
+
+## What Bridgeling Does
+
+Bridgeling solves this by creating an **AI-powered Q&A assistant** that any institution can embed into their website with a single line of code. It:
+
+1. **Crawls** institutional websites automatically
+2. **Understands** questions in any language
+3. **Searches** relevant information using AI embeddings
+4. **Answers** users in their preferred language
+5. **Cites** sources so users can verify answers
+
+The system is entirely powered by Claude—no external APIs, no complex infrastructure, no manual setup needed.
+
+### Key Features
+
+- **Multilingual**: Automatically detects user language and responds in kind
+- **Embeddable**: Single-line JavaScript widget, works on any website
+- **No-code**: No training data required; crawls and indexes automatically
+- **Cost-effective**: ~$0.003 per query
+- **Source attribution**: Answers include links to original documents
+
 ## Overview
 
 Bridgeling is a lightweight, drop-in AI layer for any institution. It:
