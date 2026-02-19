@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Srijan's Personal Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            background: #357abd;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .response-area {
+            min-height: 80px;
+            padding: 20px;
+            border-radius: 8px;
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #666;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e0e0e0;
+            border-top-color: #4a90e2;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success {
+            display: none;
+            color: #27ae60;
+        }
+
+        .success.active {
+            display: block;
+        }
+
+        .error {
+            display: none;
+            color: #e74c3c;
+        }
+
+        .error.active {
+            display: block;
+        }
+
+        .response-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #999;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .intent-value {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .empty {
+            display: none;
+            color: #999;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .empty.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Srijan's Personal Assistant</h1>
+
+        <div class="form-group">
+            <input
+                type="text"
+                id="messageInput"
+                placeholder="Enter your message..."
+                autocomplete="off"
+            />
+            <button id="submitBtn">Send</button>
+        </div>
+
+        <div class="response-area">
+            <div class="empty active" id="emptyState">
+                Enter a message and click send
+            </div>
+
+            <div class="loading" id="loadingState">
+                <span class="spinner"></span>Waiting for response...
+            </div>
+
+            <div class="success" id="successState">
+                <span class="response-label">Intent Detected</span>
+                <div class="intent-value" id="intentValue"></div>
+            </div>
+
+            <div class="error" id="errorState">
+                <span class="response-label">Error</span>
+                <div class="intent-value" id="errorMessage"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const WEBHOOK_URL = "http://localhost:5680/webhook-test/agent-router";
+
+        const messageInput = document.getElementById("messageInput");
+        const submitBtn = document.getElementById("submitBtn");
+        const emptyState = document.getElementById("emptyState");
+        const loadingState = document.getElementById("loadingState");
+        const successState = document.getElementById("successState");
+        const errorState = document.getElementById("errorState");
+        const intentValue = document.getElementById("intentValue");
+        const errorMessage = document.getElementById("errorMessage");
+
+        function showState(state) {
+            emptyState.classList.remove("active");
+            loadingState.classList.remove("active");
+            successState.classList.remove("active");
+            errorState.classList.remove("active");
+
+            if (state === "empty") emptyState.classList.add("active");
+            else if (state === "loading") loadingState.classList.add("active");
+            else if (state === "success") successState.classList.add("active");
+            else if (state === "error") errorState.classList.add("active");
+        }
+
+        async function handleSubmit() {
+            const message = messageInput.value.trim();
+
+            if (!message) {
+                alert("Please enter a message");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            showState("loading");
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ message }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.intent) {
+                    intentValue.textContent = data.intent;
+                    showState("success");
+                } else {
+                    throw new Error("No intent in response");
+                }
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                showState("error");
+            } finally {
+                submitBtn.disabled = false;
+            }
+        }
+
+        submitBtn.addEventListener("click", handleSubmit);
+
+        messageInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                handleSubmit();
+            }
+        });
+
+        messageInput.focus();
+    </script>
+</body>
+</html>
