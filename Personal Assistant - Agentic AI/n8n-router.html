@@ -247,11 +247,12 @@
 
                 const data = await response.json();
 
-                if (data.intent) {
+                if (data.status === "success") {
                     intentValue.textContent = data.intent;
                     showState("success");
                 } else {
-                    throw new Error("No intent in response");
+                     errorMessage.textContent = data.message || "Something went wrong";
+                    showState("error");
                 }
             } catch (error) {
                 errorMessage.textContent = error.message;
