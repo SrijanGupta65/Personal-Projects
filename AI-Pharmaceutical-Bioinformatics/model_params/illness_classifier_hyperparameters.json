@@ -1,0 +1,8 @@
+{
+  "model_type": "xgboost",
+  "params": {
+    "learning_rate": 0.2,
+    "max_depth": 2,
+    "n_estimators": 100
+  }
+}

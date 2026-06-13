@@ -176,3 +176,36 @@ The first working version should:
 4. Group similar patients using a simple clustering or similarity approach.
 5. Output an explainable medication-support summary.
 6. Clearly label all results as synthetic and educational.
+
+## Current Status / Next Session Pickup
+
+(Last updated 2026-06-12)
+
+### Illness classification workflow (built so far)
+
+* `src/embedding_features.py` — builds the processed dataset (vitals + symptom
+  embeddings). Run with a CSV path to append new data to both the raw `.xlsx`
+  and processed `.csv`; run with no arg for a full rebuild.
+* `notebooks/02_illness_classification.ipynb` — reads the processed CSV, tunes
+  XGBoost hyperparameters, and saves the best ones to
+  `model_params/illness_classifier_hyperparameters.json`.
+* `src/illness_classifier.py` — reads that params JSON, trains the final model,
+  and saves `model.json` + `labels.json` to `outputs/illness_classifier/`.
+
+### TODO (next session — START HERE)
+
+1. **Versioned model runs (in progress, not finished).** We decided each
+   training run should write its OWN folder under
+   `outputs/illness_classifier/<run_id>/` containing `model.json`,
+   `labels.json`, and `metrics.json` — never overwriting past runs.
+   * Still need to decide the run-folder naming: timestamp (e.g.
+     `2026-06-12_1845`) vs version number (`v1`, `v2`).
+   * `metrics.json` should hold test accuracy, CV accuracy, the params, train/
+     test sizes, and the training **date and time**.
+   * NOTE: `src/illness_classifier.py` already has a `METRICS_PATH` constant
+     added but the metrics-writing code is NOT implemented yet. Finish this.
+2. **Prediction/inference script** — no script yet loads a saved model from
+   `outputs/illness_classifier/` to predict an illness for a new patient.
+3. **AWS (later):** wrap the workflow so uploading a CSV to S3 triggers it.
+   Note: sentence-transformers + PyTorch is too big for a default Lambda —
+   plan for a container Lambda / Batch / EC2 / SageMaker instead.
