@@ -194,7 +194,7 @@ model on the full dataset.
 * `src/data_preparation.py` — all data prep. `process_new_data(csv_path)`
   validates the CSV columns, keeps only new patients (by `Patient_ID`), embeds
   their symptoms with SentenceTransformer (`all-MiniLM-L6-v2`), and appends the
-  rows to BOTH the raw `.xlsx` and the processed `.csv`. Run with no arg for a
+  rows to BOTH the raw `.csv` and the processed `.csv`. Run with no arg for a
   full rebuild. Also defines the shared column/path constants the other files
   import (`VITAL_COLS`, `LABEL_COL`, `PROCESSED_DATA_PATH`).
 * `notebooks/02_illness_classification.ipynb` — reads the processed CSV, tunes

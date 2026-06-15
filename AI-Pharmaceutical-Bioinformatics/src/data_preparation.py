@@ -5,7 +5,7 @@ Embedding the symptom text with SentenceTransformer is the slow step, so it
 lives here instead of in the notebook. There are two ways to run this file:
 
     # Append new data (the day-to-day workflow):
-    #   embeds ONLY the new rows, then appends them to BOTH the raw .xlsx
+    #   embeds ONLY the new rows, then appends them to BOTH the raw .csv
     #   and the processed .csv.
     python src/data_preparation.py data/raw/new_rows.csv
 
@@ -28,8 +28,7 @@ import pandas as pd
 # Resolve paths from the project root (the parent of this src/ folder) so the
 # file works no matter which directory you run it from.
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-RAW_DATA_PATH = PROJECT_ROOT / "data" / "raw" / "nurseassist_patient_dataset_210_rows.xlsx"
-RAW_SHEET_NAME = "Patient Dataset"
+RAW_DATA_PATH = PROJECT_ROOT / "data" / "raw" / "nurseassist_patient_dataset.csv"
 PROCESSED_DATA_PATH = PROJECT_ROOT / "data" / "processed" / "illness_classification_data.csv"
 
 # Stable unique key used to tell new patients apart from ones we already have.
@@ -56,6 +55,7 @@ def _get_model():
     """Load the SentenceTransformer model once and cache it for reuse."""
     global _model
     if _model is None:
+        print("  Loading the embedding model (first time can take a moment)...", flush=True)
         from sentence_transformers import SentenceTransformer
 
         _model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -72,7 +72,9 @@ def embed_symptoms(texts) -> pd.DataFrame:
     Returns:
         DataFrame with one column per embedding dimension (emb_0, emb_1, ...).
     """
-    embeddings = _get_model().encode(list(texts))
+    texts = list(texts)
+    print(f"  Embedding {len(texts)} symptom text(s)...", flush=True)
+    embeddings = _get_model().encode(texts, show_progress_bar=True)
     return pd.DataFrame(
         embeddings,
         columns=[f"emb_{i}" for i in range(embeddings.shape[1])],
@@ -107,7 +109,7 @@ def rebuild_all() -> pd.DataFrame:
     Returns:
         The full processed DataFrame that was saved.
     """
-    raw_df = pd.read_excel(RAW_DATA_PATH, sheet_name=RAW_SHEET_NAME)
+    raw_df = pd.read_csv(RAW_DATA_PATH)
     processed_df = build_processed_rows(raw_df)
 
     PROCESSED_DATA_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -124,7 +126,7 @@ def process_new_data(input_path) -> pd.DataFrame:
       1. Read the new CSV and check its headers exactly match the raw file.
       2. Keep only patients whose Patient_ID isn't already in the raw file
          (duplicate guard, so re-running the same file does nothing).
-      3. Append the new rows to the raw .xlsx.
+      3. Append the new rows to the raw .csv.
       4. Embed the new rows and append them to the processed .csv.
 
     Args:
@@ -135,7 +137,7 @@ def process_new_data(input_path) -> pd.DataFrame:
     """
     input_path = Path(input_path)
     new_df = pd.read_csv(input_path)
-    raw_df = pd.read_excel(RAW_DATA_PATH, sheet_name=RAW_SHEET_NAME)
+    raw_df = pd.read_csv(RAW_DATA_PATH)
 
     # 1. Headers must match the raw file exactly (same names, same order).
     if list(new_df.columns) != list(raw_df.columns):
@@ -153,9 +155,9 @@ def process_new_data(input_path) -> pd.DataFrame:
         print("No new rows to add (all Patient_IDs already exist). Nothing changed.")
         return new_rows
 
-    # 3. Append the full new rows to the raw .xlsx and save.
+    # 3. Append the full new rows to the raw .csv and save.
     updated_raw = pd.concat([raw_df, new_rows], ignore_index=True)
-    updated_raw.to_excel(RAW_DATA_PATH, sheet_name=RAW_SHEET_NAME, index=False)
+    updated_raw.to_csv(RAW_DATA_PATH, index=False)
 
     # 4. Embed the new rows and append them to the processed .csv.
     new_processed = build_processed_rows(new_rows)
