@@ -14,24 +14,27 @@ advice and must not be used for real prescribing.
 """
 
 import json
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split
 from sklearn.preprocessing import LabelEncoder
 from xgboost import XGBClassifier
 
 # Reuse the column definitions and processed-data path from the feature builder.
-from src.embedding_features import LABEL_COL, PROCESSED_DATA_PATH, VITAL_COLS
+from src.data_preparation import LABEL_COL, PROCESSED_DATA_PATH, VITAL_COLS
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PARAMS_PATH = PROJECT_ROOT / "model_params" / "illness_classifier_hyperparameters.json"
-MODEL_PATH = PROJECT_ROOT / "outputs" / "illness_classifier" / "model.json"
-LABELS_PATH = PROJECT_ROOT / "outputs" / "illness_classifier" / "labels.json"
-METRICS_PATH = PROJECT_ROOT / "outputs" / "illness_classifier" / "metrics.json"
+
+# Each training run saves into its own timestamped folder under this base dir,
+# so past runs are never overwritten. The file names inside each run folder
+# stay the same (model.json, labels.json, metrics.json).
+RUNS_DIR = PROJECT_ROOT / "outputs" / "illness_classifier"
 
 # Same settings the notebook used, so results match.
-MIN_PER_CLASS = 5  # drop illnesses with too few patients to split/validate
+MIN_PER_CLASS = 10  # drop illnesses with too few patients to split/validate
 RANDOM_STATE = 42
 
 
@@ -57,7 +60,10 @@ def load_dataset(data_path: Path = PROCESSED_DATA_PATH):
 
 
 def train_and_save():
-    """Train the final model on saved params and save the model + labels."""
+    """Train the final model, then save the model, labels, and metrics.
+
+    Each run writes into its own timestamped folder so earlier runs are kept.
+    """
     config = load_params()
     X, y = load_dataset()
 
@@ -70,27 +76,57 @@ def train_and_save():
     label_encoder = LabelEncoder()
     y_train_encoded = label_encoder.fit_transform(y_train)
 
-    # Build and train the final model using the tuned hyperparameters.
+    # Build the final model using the tuned hyperparameters.
     model = XGBClassifier(
         **config["params"],
         random_state=RANDOM_STATE,
         eval_metric="mlogloss",
     )
+
+    # Cross-validation accuracy on the train set (same 5-fold setup as the
+    # notebook), measured before the final fit on all training data.
+    kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
+    cv_scores = cross_val_score(model, X_train, y_train_encoded, cv=kfold, scoring="accuracy")
+    cv_accuracy = float(cv_scores.mean())
+
     model.fit(X_train, y_train_encoded)
 
     # Honest final score: evaluate once on the held-out test set.
-    test_accuracy = model.score(X_test, label_encoder.transform(y_test))
+    test_accuracy = float(model.score(X_test, label_encoder.transform(y_test)))
+
+    # Make this run's own folder, named by date and time.
+    trained_at = datetime.now()
+    run_dir = RUNS_DIR / trained_at.strftime("%Y-%m-%d_%H%M")
+    run_dir.mkdir(parents=True, exist_ok=True)
+
+    model_path = run_dir / "model.json"
+    labels_path = run_dir / "labels.json"
+    metrics_path = run_dir / "metrics.json"
 
     # Save the trained model (weights) and the label names for prediction later.
-    MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
-    model.save_model(MODEL_PATH)
-    with open(LABELS_PATH, "w") as f:
+    model.save_model(model_path)
+    with open(labels_path, "w") as f:
         json.dump(list(label_encoder.classes_), f, indent=2)
 
-    print(f"Trained illness classifier with params: {config['params']}")
+    # Save a record of how this run performed and how it was trained.
+    metrics = {
+        "trained_at": trained_at.strftime("%Y-%m-%d %H:%M:%S"),
+        "test_accuracy": test_accuracy,
+        "cv_accuracy": cv_accuracy,
+        "params": config["params"],
+        "train_size": len(X_train),
+        "test_size": len(X_test),
+    }
+    with open(metrics_path, "w") as f:
+        json.dump(metrics, f, indent=2)
+
+    # One clean summary at the end (same fields saved in metrics.json).
+    print(f"Trained at:    {metrics['trained_at']}")
+    print(f"Params:        {config['params']}")
+    print(f"CV accuracy:   {cv_accuracy:.3f}")
     print(f"Test accuracy: {test_accuracy:.3f}")
-    print(f"Saved model to {MODEL_PATH}")
-    print(f"Saved labels to {LABELS_PATH}")
+    print(f"Train / test:  {len(X_train)} / {len(X_test)}")
+    print(f"Saved run to:  {run_dir}")
     return model
 
 

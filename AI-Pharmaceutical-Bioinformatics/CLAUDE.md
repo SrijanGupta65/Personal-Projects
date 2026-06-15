@@ -136,7 +136,7 @@ Stores generated results such as charts, clustered datasets, model results, and 
 * Use docstrings for important functions.
 * Avoid writing everything in one giant script.
 * Do not overwrite raw data.
-* Make the project runnable from `main.py`.
+* Make the project runnable from `retrain.py` (the project entry point).
 * Keep the project beginner-friendly and explainable.
 * Do not overbuild the project unless asked.
 * Prefer simple baseline models before complex models.
@@ -158,7 +158,7 @@ When starting a new task:
 
 Since this project may start with no code, begin by creating a clean starter structure:
 
-* `main.py`
+* `retrain.py` (entry point)
 * `README.md`
 * `requirements.txt`
 * `data/raw/`
@@ -177,35 +177,50 @@ The first working version should:
 5. Output an explainable medication-support summary.
 6. Clearly label all results as synthetic and educational.
 
-## Current Status / Next Session Pickup
+## Current Status
 
-(Last updated 2026-06-12)
+(Last updated 2026-06-14)
 
-### Illness classification workflow (built so far)
+The project currently does one thing end to end: an **illness-classification
+workflow** that takes new patient data, prepares it, and retrains an XGBoost
+model on the full dataset.
 
-* `src/embedding_features.py` — builds the processed dataset (vitals + symptom
-  embeddings). Run with a CSV path to append new data to both the raw `.xlsx`
-  and processed `.csv`; run with no arg for a full rebuild.
+### Files that make up the workflow
+
+* `retrain.py` — project entry point. Set `NEW_DATA_PATH` to a CSV of new
+  patients, then run `python retrain.py`. It runs two steps in order:
+  (1) adds the new data via `process_new_data()`, then (2) retrains via
+  `train_and_save()`.
+* `src/data_preparation.py` — all data prep. `process_new_data(csv_path)`
+  validates the CSV columns, keeps only new patients (by `Patient_ID`), embeds
+  their symptoms with SentenceTransformer (`all-MiniLM-L6-v2`), and appends the
+  rows to BOTH the raw `.xlsx` and the processed `.csv`. Run with no arg for a
+  full rebuild. Also defines the shared column/path constants the other files
+  import (`VITAL_COLS`, `LABEL_COL`, `PROCESSED_DATA_PATH`).
 * `notebooks/02_illness_classification.ipynb` — reads the processed CSV, tunes
   XGBoost hyperparameters, and saves the best ones to
-  `model_params/illness_classifier_hyperparameters.json`.
-* `src/illness_classifier.py` — reads that params JSON, trains the final model,
-  and saves `model.json` + `labels.json` to `outputs/illness_classifier/`.
+  `model_params/illness_classifier_hyperparameters.json`. Only re-run this when
+  you want to re-tune.
+* `src/illness_classifier.py` — reads the params JSON, retrains the final model,
+  and saves a **versioned run**: each run writes its own timestamped folder
+  `outputs/illness_classifier/<YYYY-MM-DD_HHMM>/` containing `model.json`,
+  `labels.json`, and `metrics.json` (test accuracy, CV accuracy, params,
+  train/test sizes, and training date/time). Past runs are never overwritten.
 
-### TODO (next session — START HERE)
+### Key conventions
 
-1. **Versioned model runs (in progress, not finished).** We decided each
-   training run should write its OWN folder under
-   `outputs/illness_classifier/<run_id>/` containing `model.json`,
-   `labels.json`, and `metrics.json` — never overwriting past runs.
-   * Still need to decide the run-folder naming: timestamp (e.g.
-     `2026-06-12_1845`) vs version number (`v1`, `v2`).
-   * `metrics.json` should hold test accuracy, CV accuracy, the params, train/
-     test sizes, and the training **date and time**.
-   * NOTE: `src/illness_classifier.py` already has a `METRICS_PATH` constant
-     added but the metrics-writing code is NOT implemented yet. Finish this.
-2. **Prediction/inference script** — no script yet loads a saved model from
-   `outputs/illness_classifier/` to predict an illness for a new patient.
-3. **AWS (later):** wrap the workflow so uploading a CSV to S3 triggers it.
-   Note: sentence-transformers + PyTorch is too big for a default Lambda —
-   plan for a container Lambda / Batch / EC2 / SageMaker instead.
+* Classes with fewer than `MIN_PER_CLASS = 10` patients are dropped before
+  training (kept consistent between the notebook and `illness_classifier.py`).
+* Run scripts with the project venv, e.g. `./venv/bin/python retrain.py`.
+* Open design questions are tracked in `docs/concern.md` (e.g. what to do if
+  retraining lowers accuracy; when to also re-tune hyperparameters).
+
+### Not built yet (future ideas, not started)
+
+* **Inference/prediction script** — load a saved run and predict an illness for
+  a new patient. Parked; design still being thought through.
+* **Retrain threshold** — only retrain once N new patients have accumulated
+  (threshold not chosen yet; intentionally not a small number).
+* **AWS** — trigger the workflow from an S3 upload. Note: sentence-transformers
+  + PyTorch is too big for a default Lambda; plan for container Lambda / Batch /
+  EC2 / SageMaker.

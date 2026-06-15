@@ -7,12 +7,12 @@ lives here instead of in the notebook. There are two ways to run this file:
     # Append new data (the day-to-day workflow):
     #   embeds ONLY the new rows, then appends them to BOTH the raw .xlsx
     #   and the processed .csv.
-    python src/embedding_features.py data/raw/new_rows.csv
+    python src/data_preparation.py data/raw/new_rows.csv
 
     # Full rebuild (reset): re-embed ALL raw rows and overwrite the processed
     #   .csv. Use this if the processed file gets corrupted or you change the
     #   embedding model.
-    python src/embedding_features.py
+    python src/data_preparation.py
 
 The notebook only reads the processed .csv, so it picks up new rows automatically.
 
