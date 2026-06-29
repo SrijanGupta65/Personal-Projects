@@ -136,7 +136,6 @@ Stores generated results such as charts, clustered datasets, model results, and 
 * Use docstrings for important functions.
 * Avoid writing everything in one giant script.
 * Do not overwrite raw data.
-* Make the project runnable from `retrain.py` (the project entry point).
 * Keep the project beginner-friendly and explainable.
 * Do not overbuild the project unless asked.
 * Prefer simple baseline models before complex models.
@@ -158,7 +157,7 @@ When starting a new task:
 
 Since this project may start with no code, begin by creating a clean starter structure:
 
-* `retrain.py` (entry point)
+* `retrain.py`
 * `README.md`
 * `requirements.txt`
 * `data/raw/`
@@ -214,13 +213,3 @@ model on the full dataset.
 * Run scripts with the project venv, e.g. `./venv/bin/python retrain.py`.
 * Open design questions are tracked in `docs/concern.md` (e.g. what to do if
   retraining lowers accuracy; when to also re-tune hyperparameters).
-
-### Not built yet (future ideas, not started)
-
-* **Inference/prediction script** — load a saved run and predict an illness for
-  a new patient. Parked; design still being thought through.
-* **Retrain threshold** — only retrain once N new patients have accumulated
-  (threshold not chosen yet; intentionally not a small number).
-* **AWS** — trigger the workflow from an S3 upload. Note: sentence-transformers
-  + PyTorch is too big for a default Lambda; plan for container Lambda / Batch /
-  EC2 / SageMaker.
