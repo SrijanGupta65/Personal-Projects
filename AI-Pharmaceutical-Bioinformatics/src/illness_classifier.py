@@ -1,9 +1,10 @@
 """
 Train the illness-classification model using saved best hyperparameters.
 
-Reads the tuned hyperparameters from model_params/, trains a final XGBoost
-model on the processed data, evaluates it once on the held-out test set, and
-saves the trained model (weights) and the illness label names to outputs/.
+Reads the tuned hyperparameters from model_params/, pulls the training data
+from the Postgres database, trains a final XGBoost model, evaluates it once on
+the held-out test set, and saves the trained model (weights) and the illness
+label names to outputs/.
 
 Run it from the project root (as a module, so the src import resolves):
 
@@ -22,8 +23,10 @@ from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test
 from sklearn.preprocessing import LabelEncoder
 from xgboost import XGBClassifier
 
-# Reuse the column definitions and processed-data path from the feature builder.
-from src.data_preparation import LABEL_COL, PROCESSED_DATA_PATH, VITAL_COLS
+# Reuse the column definitions from the feature builder, and the database-backed
+# data loader from the patient store.
+from src import patient_store
+from src.data_preparation import LABEL_COL, VITAL_COLS
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PARAMS_PATH = PROJECT_ROOT / "model_params" / "illness_classifier_hyperparameters.json"
@@ -44,9 +47,9 @@ def load_params(params_path: Path = PARAMS_PATH) -> dict:
         return json.load(f)
 
 
-def load_dataset(data_path: Path = PROCESSED_DATA_PATH):
-    """Load the processed data and return (X, y) with rare classes dropped."""
-    df = pd.read_csv(data_path)
+def load_dataset():
+    """Load training data from the database and return (X, y) with rare classes dropped."""
+    df = patient_store.load_training_data()
 
     # Keep only illnesses with enough patients to split and validate.
     counts = df[LABEL_COL].value_counts()

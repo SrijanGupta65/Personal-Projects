@@ -7,3 +7,6 @@ openpyxl
 jupyter
 sentence-transformers
 xgboost
+psycopg2-binary
+pgvector
+python-dotenv

@@ -1,0 +1,29 @@
+# Local Postgres + pgvector for development.
+#
+# This runs the SAME database engine that AWS RDS will run, so the code we
+# write against this also works against RDS later (we just change DATABASE_URL).
+#
+# Start it with:   docker compose up -d
+# Stop it with:    docker compose down        (data is kept)
+# Wipe it with:    docker compose down -v      (deletes all data)
+#
+# The schema in db/schema.sql runs automatically the FIRST time the database
+# is created (while the data volume is empty).
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: nurseassist-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: nurseassist
+      POSTGRES_PASSWORD: nurseassist
+      POSTGRES_DB: nurseassist
+    ports:
+      - "5432:5432"
+    volumes:
+      - nurseassist_pgdata:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+
+volumes:
+  nurseassist_pgdata:
